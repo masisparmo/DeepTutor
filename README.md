@@ -25,7 +25,8 @@
   <a href="assets/README/README_HI.md"><img alt="Hindi" height="40" src="https://img.shields.io/badge/Hindi-CDCFD4"></a>&nbsp;
   <a href="assets/README/README_PT.md"><img alt="Português" height="40" src="https://img.shields.io/badge/Português-CDCFD4"></a>&nbsp;
   <a href="assets/README/README_TH.md"><img alt="Thai" height="40" src="https://img.shields.io/badge/Thai-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_PL.md"><img alt="Polski" height="40" src="https://img.shields.io/badge/Polski-CDCFD4"></a>
+  <a href="assets/README/README_PL.md"><img alt="Polski" height="40" src="https://img.shields.io/badge/Polski-CDCFD4"></a>&nbsp;
+  <a href="assets/README/README_ID.md"><img alt="Bahasa Indonesia" height="40" src="https://img.shields.io/badge/Bahasa%20Indonesia-CDCFD4"></a>
 </p>
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
@@ -47,6 +48,8 @@
 > 🤝 **We welcome any kinds of contributing!** Vote on roadmap items or propose new ones at [`Roadmap`](https://github.com/HKUDS/DeepTutor/issues/498), and see our [Contributing Guide](CONTRIBUTING.md) for branching strategy, coding standards, and how to get started.
 
 ### 📦 Releases
+
+> **[2026.10.30]** [Indonesian Edition & Multi-Key Update] — Full Indonesian language (`id`) localization for interface and model responses with strict standard Indonesian grammar (anti-Malay vocabulary confusion rules), Multi-API Key pooling & auto-failover rotation (round-robin + 429 quota handling for Gemini/OpenAI), enhanced Tools toggle switch UI with high-contrast emerald indicator and clear Active/Inactive status labels, Gemini 2.5/3.8 Flash model support with reasoning effort normalization (`minimal` → `low`), standalone WebSocket client port fixes, and complete offline guide [TUTORIAL_LENGKAP_DEEPTUTOR.md](TUTORIAL_LENGKAP_DEEPTUTOR.md).
 
 > **[2026.10.19]** [v1.6.15](https://github.com/HKUDS/DeepTutor/releases/tag/v1.6.15) — Reviewed learning-path changes, grouped assessments, bounded tutoring memory, reliable chat recovery, sturdier parsing, retrieval comparisons, and native Gemini speech.
 
@@ -239,6 +242,9 @@
 
 DeepTutor is an agent-native learning workspace that connects tutoring, problem solving, quiz generation, research, visualization, and mastery practice in one extensible system.
 
+- **Full Indonesian Language (`id`)** — Native Indonesian support across both the UI and AI model outputs with strict vocabulary guardrails (preventing cross-regional Malaysian term confusion), backed by [TUTORIAL_LENGKAP_DEEPTUTOR.md](TUTORIAL_LENGKAP_DEEPTUTOR.md).
+- **Multi-API Key Pool & Auto-Rotation** — Seamless round-robin rotation and automatic failover upon rate limits (HTTP 429) across multiple comma- or newline-separated API keys for Gemini and OpenAI-compatible models.
+- **Enhanced Tools Settings UI** — High-contrast emerald toggle switches with explicit "Aktif / Nonaktif" status labels for instant visual clarity.
 - **One runtime for every mode** — Chat, Ask Questions, Quiz, Research, Visualize, Solve, Course Study, Mastery Path, Immersive Reading, and Audio Overview share one capability runtime and session context while keeping purpose-built loops and pipelines.
 - **Task Board** — Track study tasks in To do, In progress, and Done, with notes, drag-and-drop or keyboard-accessible move buttons, and an archive you can restore from. Cards stay in the current workspace and follow the existing appearance and language settings; no model configuration is required.
 - **Connected learning context** — Knowledge bases, books, Co-Writer drafts, notebooks, question banks, personas, and Memory can be reused across the workflows that support them, subject to account grants and learning policies.
