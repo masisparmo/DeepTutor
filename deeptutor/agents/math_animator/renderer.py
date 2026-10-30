@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
+import os
 from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import threading
 from typing import Awaitable, Callable
 
@@ -44,7 +47,7 @@ class ManimRenderService:
         self.turn_id = turn_id
         self.progress_callback = progress_callback
         self.workspace_root = Path(workspace_root).resolve() if workspace_root else None
-        self.path_service = None if output_dir else get_path_service()
+        self.path_service = get_path_service()
         self.base_dir = (
             Path(output_dir).resolve()
             if output_dir
@@ -52,7 +55,14 @@ class ManimRenderService:
         )
         self.source_dir = self.base_dir / "source"
         self.artifacts_dir = self.base_dir / "artifacts"
-        self.media_dir = self.base_dir / "media"
+        if os.name == "nt":
+            # On Windows without LongPathsEnabled, the 260-char MAX_PATH limit is easily
+            # breached when Manim nests partial_movie_files deep under workspace outputs.
+            # Use a short directory in temp for intermediate render files.
+            render_hash = hashlib.md5(str(self.base_dir).encode()).hexdigest()[:8]
+            self.media_dir = Path(tempfile.gettempdir()) / f"dt_m_{render_hash}"
+        else:
+            self.media_dir = self.base_dir / "media"
         self.meta_dir = self.base_dir / "meta"
         for path in (self.source_dir, self.artifacts_dir, self.media_dir, self.meta_dir):
             path.mkdir(parents=True, exist_ok=True)
@@ -87,6 +97,11 @@ class ManimRenderService:
         )
         video_file = self._find_rendered_file(".mp4")
         target_name = slugify_filename(f"{self.turn_id}-{scene_name}.mp4", f"{self.turn_id}.mp4")
+        if os.name == "nt":
+            max_allowed_len = 240 - len(str(self.artifacts_dir))
+            if max_allowed_len > 10 and len(target_name) > max_allowed_len:
+                stem = Path(target_name).stem[: max_allowed_len - 5]
+                target_name = f"{stem}.mp4"
         artifact_path = self.artifacts_dir / target_name
         artifact_path.write_bytes(video_file.read_bytes())
         await self._emit_progress(f"Saved rendered video as {artifact_path.name}.")
@@ -253,12 +268,14 @@ class ManimRenderService:
             relative_path = artifact_path.resolve().relative_to(self.workspace_root).as_posix()
             url = ""
         else:
-            assert self.path_service is not None
             relative_path = ""
-            rel_path = artifact_path.resolve().relative_to(
-                self.path_service.user_data_dir.resolve()
-            )
-            url = f"/files/outputs/{rel_path.as_posix()}"
+            try:
+                rel_path = artifact_path.resolve().relative_to(
+                    self.path_service.user_data_dir.resolve()
+                )
+                url = f"/files/outputs/{rel_path.as_posix()}"
+            except ValueError:
+                url = f"/files/outputs/{artifact_path.name}"
         return RenderedArtifact(
             type=artifact_type,
             filename=artifact_path.name,
