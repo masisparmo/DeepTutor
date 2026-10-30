@@ -546,25 +546,36 @@ function ToolToggle({
   label: string;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      disabled={disabled}
-      onClick={onChange}
-      className={`relative inline-flex h-[18px] w-[32px] shrink-0 items-center rounded-full border transition-colors ${
-        checked
-          ? "border-[var(--primary)] bg-[var(--primary)]/70"
-          : "border-[var(--border)] bg-[var(--muted)]/50"
-      } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
-    >
+    <div className="flex items-center gap-2">
       <span
-        className={`inline-block h-[12px] w-[12px] transform rounded-full bg-white shadow transition-transform ${
-          checked ? "translate-x-[16px]" : "translate-x-[2px]"
+        className={`text-[12px] font-medium transition-colors select-none ${
+          checked
+            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+            : "text-[var(--muted-foreground)]"
         }`}
-      />
-    </button>
+      >
+        {checked ? "Aktif" : "Nonaktif"}
+      </span>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
+        disabled={disabled}
+        onClick={onChange}
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 transition-colors duration-200 ease-in-out ${
+          checked
+            ? "border-emerald-500 bg-emerald-500 shadow-sm"
+            : "border-slate-300 dark:border-slate-600 bg-slate-200 dark:bg-slate-700"
+        } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+      >
+        <span
+          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-200 ease-in-out ${
+            checked ? "translate-x-5" : "translate-x-0.5"
+          }`}
+        />
+      </button>
+    </div>
   );
 }
 
