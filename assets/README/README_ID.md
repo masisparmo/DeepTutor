@@ -69,6 +69,9 @@ Fork ini menghadirkan peningkatan khusus untuk pengguna di Indonesia dan optimas
 6. **Panduan Lengkap & Mandiri**
    - Dilengkapi berkas panduan komprehensif dalam Bahasa Indonesia: [TUTORIAL_LENGKAP_DEEPTUTOR.md](../../TUTORIAL_LENGKAP_DEEPTUTOR.md).
 
+7. **Dukungan Penuh Seluruh Capabilities Termasuk Math Animator & Manim**
+   - Pustaka animasi matematika Manim (`manim>=0.19.0`) dan integrasi FFmpeg siap pakai, memungkinkan fitur **Math Animator** dan **Visualize (Manim Video)** membuat konsep animasi dan merender video pembelajaran matematika secara langsung tanpa galat *missing optional dependencies*.
+
 ---
 
 ## ✨ Fitur Unggulan

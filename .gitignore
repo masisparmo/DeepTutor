@@ -15,6 +15,7 @@ data/
 .claude
 .agents/
 .workbuddy/
+scratch/
 
 # LaTeX build artifacts
 *.aux
