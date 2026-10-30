@@ -1745,11 +1745,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       if (catalogEditable) {
         for (const [service, bucket] of Object.entries(draft.services)) {
           for (const profile of bucket.profiles) {
-            for (const model of profile.models) {
-              const original = catalog.services[service as ServiceName].profiles
-                .find((item) => item.id === profile.id)?.models.find((item) => item.id === model.id);
-              if (JSON.stringify(original) !== JSON.stringify(model) && !model.model.trim()) {
-                throw new Error(t("Enter a model ID before applying changes."));
+            if (bucket.active_profile_id === profile.id || profile.models.some((m) => m.model.trim())) {
+              for (const model of profile.models) {
+                const original = catalog.services[service as ServiceName].profiles
+                  .find((item) => item.id === profile.id)?.models.find((item) => item.id === model.id);
+                if (JSON.stringify(original) !== JSON.stringify(model) && !model.model.trim()) {
+                  throw new Error(t("Enter a model ID before applying changes."));
+                }
               }
             }
           }
