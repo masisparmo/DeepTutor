@@ -108,6 +108,7 @@ export function buildChatOutline(
 ): ChatOutlineEntry[] {
   const { messages: visible } = buildVisiblePath(messages, selectedBranches);
   const entries: ChatOutlineEntry[] = [];
+  const seenKeys = new Set<string>();
 
   for (let index = 0; index < visible.length; index += 1) {
     const msg = visible[index];
@@ -131,8 +132,12 @@ export function buildChatOutline(
       }
     }
 
+    const baseKey = turnAnchorKey(msg, index);
+    const key = seenKeys.has(baseKey) ? `${baseKey}-${index}` : baseKey;
+    seenKeys.add(baseKey);
+
     entries.push({
-      key: turnAnchorKey(msg, index),
+      key,
       messageId: msg.id,
       index,
       ordinal: entries.length + 1,

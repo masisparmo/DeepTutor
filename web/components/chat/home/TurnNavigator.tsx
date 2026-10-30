@@ -290,7 +290,7 @@ export function TurnNavigator({
             };
             return (
               <button
-                key={entry.key}
+                key={`${entry.key}-${index}`}
                 type="button"
                 data-tick={entry.key}
                 onMouseEnter={focus}

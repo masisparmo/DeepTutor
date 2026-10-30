@@ -19,7 +19,7 @@ from deeptutor.response_languages import SUPPORTED_RESPONSE_LANGUAGES
 from deeptutor.services.path_service import get_path_service
 from deeptutor.tools.builtin import USER_TOGGLEABLE_TOOL_NAMES
 
-UiLanguage = Literal["en", "zh", "fr", "de", "uk", "pl"]
+UiLanguage = Literal["en", "zh", "fr", "de", "uk", "pl", "id"]
 
 DEFAULT_UI_SETTINGS: dict[str, Any] = {
     # "snow" is the pure-white neutral theme, shown as "Default" in the UI.
@@ -50,8 +50,13 @@ _RESPONSE_LANGUAGE_ALIASES: dict[str, str] = {
     "italian": "it",
     "arabic": "ar",
     "polish": "pl",
-    "malay": "ms",
-    "bahasa melayu": "ms",
+    "malay": "id",
+    "bahasa melayu": "id",
+    "ms": "id",
+    "id": "id",
+    "indonesian": "id",
+    "bahasa indonesia": "id",
+    "indonesia": "id",
 }
 
 
@@ -119,6 +124,8 @@ def _normalize_language(language: Any, default: str = "en") -> str:
             return "uk"
         if s in {"polish", "polski"} or base == "pl":
             return "pl"
+        if s in {"indonesian", "bahasa indonesia", "indonesia", "malay", "bahasa melayu"} or base in {"id", "in", "ms"}:
+            return "id"
 
     # Fall back to default
     if isinstance(default, str):

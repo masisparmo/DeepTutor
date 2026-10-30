@@ -23,12 +23,17 @@ _LANGUAGE_LABELS: dict[str, str] = {
     "it": "Italiano",
     "ar": "العربية",
     "pl": "Polski",
-    "ms": "Bahasa Melayu",
+    "ms": "Bahasa Indonesia",
+    "id": "Bahasa Indonesia",
+    "in": "Bahasa Indonesia",
 }
 
 
 def normalize_language(language: str | None) -> str:
-    return (language or "en").strip().lower() or "en"
+    lang = (language or "en").strip().lower() or "en"
+    if lang in ("ms", "malay", "bahasa melayu", "in"):
+        return "id"
+    return lang
 
 
 def is_chinese(language: str | None) -> bool:
@@ -94,6 +99,28 @@ def language_directive(language: str | None, *, allow_user_override: bool = Fals
             "original form."
         )
         return f"{body} {_OVERRIDE_EN}" if allow_user_override else body
+    if code in ("id", "in", "indonesian"):
+        body = (
+            "\n\n[Petunjuk Bahasa / Language Requirement]\n"
+            "WAJIB gunakan BAHASA INDONESIA yang baku, alami, dan komunikatif. "
+            "DILARANG KERAS menggunakan ragam Bahasa Melayu / Malaysia!\n"
+            "Perhatikan padanan kosakata resmi Bahasa Indonesia berikut:\n"
+            "- 'proyek' (BUKAN 'projek')\n"
+            "- 'file' / 'berkas' (BUKAN 'fail')\n"
+            "- 'tautan' / 'link' (BUKAN 'pautan')\n"
+            "- 'informasi' (BUKAN 'maklumat')\n"
+            "- 'diperbarui' / 'pembaruan' (BUKAN 'dikemas kini' / 'kemas kini')\n"
+            "- 'penjelasan' (BUKAN 'penerangan')\n"
+            "- 'daftar' (BUKAN 'senarai')\n"
+            "- 'selalu' (BUKAN 'sentiasa')\n"
+            "- 'unduh' / 'download' (BUKAN 'muat turun')\n"
+            "- 'resmi' (BUKAN 'rasmi')\n"
+            "- 'memungkinkan' (BUKAN 'membolehkan')\n"
+            "- 'cepat' (BUKAN 'pantas')\n"
+            "- 'adalah' / 'merupakan' (BUKAN 'ialah')\n"
+            "Tuliskan seluruh teks, penjelasan, judul, dan kesimpulan secara konsisten dalam Bahasa Indonesia yang baik dan benar."
+        )
+        return body
     body = (
         f"\n\n[Language] Write ALL reader-facing text strictly in {label}. "
         "Do NOT switch languages even if the source material, JSON keys, or "

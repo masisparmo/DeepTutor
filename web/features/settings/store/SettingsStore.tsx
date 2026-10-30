@@ -117,6 +117,7 @@ export const RESPONSE_LANGUAGE_OPTIONS: readonly ResponseLanguageOption[] = [
   { value: "pl", label: "Polski" },
   { value: "uk", label: "Українська" },
   { value: "ms", label: "Bahasa Melayu" },
+  { value: "id", label: "Bahasa Indonesia" },
 ];
 
 type CodeBlockUiSettings = Pick<

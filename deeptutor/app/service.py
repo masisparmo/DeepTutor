@@ -163,7 +163,7 @@ class TurnApplicationService:
         await store.update_session_preferences(
             session["id"],
             {
-                "language": str(payload.get("language") or "en"),
+                "language": "id" if str(payload.get("language") or "").lower() in ("ms", "malay", "bahasa melayu", "") else str(payload.get("language")),
                 "notebook_references": list(payload.get("notebook_references") or []),
                 "history_references": list(payload.get("history_references") or []),
                 "book_references": list(payload.get("book_references") or []),

@@ -25,7 +25,8 @@ export type ResponseLanguage =
   | "ar"
   | "pl"
   | "uk"
-  | "ms";
+  | "ms"
+  | "id";
 
 const SUPPORTED_RESPONSE_LANGUAGE_CODES: readonly ResponseLanguage[] = [
   "en",
@@ -43,6 +44,7 @@ const SUPPORTED_RESPONSE_LANGUAGE_CODES: readonly ResponseLanguage[] = [
   "pl",
   "uk",
   "ms",
+  "id",
 ];
 
 export function isResponseLanguage(value: unknown): value is ResponseLanguage {
@@ -68,6 +70,10 @@ const RESPONSE_LANGUAGE_ALIASES: Record<string, ResponseLanguage> = {
   malay: "ms",
   "bahasa melayu": "ms",
   "zh-cn": "zh",
+  id: "id",
+  indonesian: "id",
+  "bahasa indonesia": "id",
+  indonesia: "id",
 };
 
 export const ACTIVE_SESSION_STORAGE_KEY = "deeptutor.activeSessionId.tab";
@@ -144,6 +150,7 @@ export function resolveResponseLanguage(
   legacyLanguage: string | null | undefined = "en",
 ): ResponseLanguage {
   const code = value?.trim().toLowerCase();
+  if (code === "ms" || code === "malay" || code === "bahasa melayu") return "id";
   if ((SUPPORTED_RESPONSE_LANGUAGE_CODES as readonly string[]).includes(code ?? "")) {
     return code as ResponseLanguage;
   }

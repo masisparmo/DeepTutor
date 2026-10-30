@@ -22,7 +22,7 @@ from typing import Any
 from openai import AsyncAzureOpenAI, AsyncOpenAI
 
 from deeptutor.services.config import load_system_settings
-from deeptutor.services.keypool import KeyPool, primary_api_key
+from deeptutor.services.keypool import KeyPool, parse_key_list, primary_api_key
 from deeptutor.services.llm import get_token_limit_kwargs, supports_tools
 from deeptutor.services.llm.capabilities import catalog_capability_override
 from deeptutor.services.llm.exceptions import (
@@ -129,18 +129,19 @@ def _build_openai_client(
     # A stale SSL_CERT_FILE (common with cloned conda envs) makes httpx's
     # create_ssl_context raise FileNotFoundError mid-__init__, aborting client
     # construction. Drop broken CA paths first so TLS uses its default CA config.
-    sanitize_invalid_ssl_env()
-    if isinstance(config.api_key, list):
-        keys = [str(key).strip() for key in config.api_key if str(key or "").strip()]
+    parsed_keys = parse_key_list(config.api_key)
+    if len(parsed_keys) > 1:
         clients = {
             key: _build_openai_client(
                 replace(config, api_key=key),
                 disable_ssl_verify=disable_ssl_verify,
                 sdk_max_retries=0,
             )
-            for key in keys
+            for key in parsed_keys
         }
-        return _KeyRotatingClient(KeyPool(keys), clients)
+        return _KeyRotatingClient(KeyPool(parsed_keys), clients)
+    if len(parsed_keys) == 1:
+        config = replace(config, api_key=parsed_keys[0])
     spec = find_by_name(config.binding)
     backend = effective_backend(spec, config.api_format)
     wire_api = wire_api_for_provider(config.wire_api, spec)

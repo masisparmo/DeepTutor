@@ -20,7 +20,7 @@ import json_repair
 from loguru import logger
 from openai import AsyncOpenAI
 
-from deeptutor.services.keypool import KeyPool
+from deeptutor.services.keypool import KeyPool, parse_key_list
 from deeptutor.services.llm.capabilities import (
     disable_forced_tool_choice_at_runtime,
     disable_response_format_at_runtime,
@@ -179,8 +179,7 @@ class OpenAICompatProvider(LLMProvider):
         wire_api: str = "auto",
         configure_env: bool = True,
     ):
-        keys = api_key if isinstance(api_key, list) else [api_key]
-        keys = [str(key).strip() for key in keys if str(key or "").strip()]
+        keys = parse_key_list(api_key)
         primary_key = keys[0] if keys else None
         super().__init__(primary_key, api_base)
         self._key_pool = KeyPool(keys) if keys else None

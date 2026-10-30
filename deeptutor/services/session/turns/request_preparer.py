@@ -154,12 +154,12 @@ class TurnRequestPreparer:
             {key: value for key, value in payload.items() if key != "type"}
         ).to_payload()
         persona_explicit = "persona" in payload
-        if not payload.get("language"):
+        if not payload.get("language") or payload.get("language") in ("ms", "malay", "bahasa melayu"):
             from deeptutor.services.settings.interface_settings import (
                 get_response_language,
             )
 
-            payload = {**payload, "language": get_response_language(default="en")}
+            payload = {**payload, "language": get_response_language(default="id")}
         raw_config = dict(payload.get("config", {}) or {})
         linked_task_ids = raw_config.pop("linked_task_ids", None)
         resource_reuse = raw_config.pop("_resource_reuse", None)
@@ -187,6 +187,8 @@ class TurnRequestPreparer:
             reply_language_override = payload["reply_language_override"]
         else:
             reply_language_override = preferences.get("reply_language_override")
+        if reply_language_override in ("ms", "malay", "bahasa melayu"):
+            reply_language_override = "id"
         if reply_language_override:
             payload["language"] = reply_language_override
         payload["_reply_language_fixed"] = bool(reply_language_override)

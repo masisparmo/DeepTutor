@@ -112,7 +112,7 @@ def default_reasoning_effort_for(provider: str | None, model: str | None) -> str
     off_patterns = _PROVIDER_DEFAULT_OFF_PATTERNS.get(provider_name)
     if off_patterns and _matches(model or "", off_patterns):
         if _matches(model or "", _MINIMAL_NOT_OFF_PATTERNS.get(provider_name, ())):
-            return "minimal"
+            return "low" if provider_name == "gemini" else "minimal"
         return "none"
     return None
 
@@ -131,7 +131,7 @@ def thinking_off_effort_for(provider: str | None, model: str | None) -> str:
     """
     provider_name = (provider or "").strip().lower()
     if _matches(model or "", _MINIMAL_NOT_OFF_PATTERNS.get(provider_name, ())):
-        return "minimal"
+        return "low" if provider_name == "gemini" else "minimal"
     return "none"
 
 
@@ -153,6 +153,8 @@ def build_openai_compatible_reasoning_kwargs(
         return {}
 
     provider_name = _spec_name(spec, binding)
+    if provider_name == "groq" or binding == "groq":
+        return {}
     model_name = model or ""
     thinking_style = str(getattr(spec, "thinking_style", "") or "")
     patterns = tuple(getattr(spec, "reasoning_model_patterns", ()) or ())
@@ -194,6 +196,9 @@ def build_openai_compatible_reasoning_kwargs(
         semantic_effort = resolved_effort.lower()
         if semantic_effort == "minimum":
             semantic_effort = "minimal"
+        if provider_name == "gemini" and semantic_effort in ("minimal", "minimum"):
+            semantic_effort = "low"
+            resolved_effort = "low"
 
     kwargs: dict[str, Any] = {}
     # OpenRouter exposes a provider-neutral reasoning object.  Keep the

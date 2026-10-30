@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from deeptutor.services.keypool import KeyPool
+from deeptutor.services.keypool import KeyPool, parse_key_list
 
 
 def looks_like_multimodal_embedding_model(model_name: Optional[str]) -> bool:
@@ -156,9 +156,7 @@ class BaseEmbeddingAdapter(ABC):
                   model family (default).
                 - request_timeout: Request timeout in seconds
         """
-        raw_api_key = config.get("api_key")
-        keys = raw_api_key if isinstance(raw_api_key, list) else [raw_api_key]
-        keys = [str(key).strip() for key in keys if str(key or "").strip()]
+        keys = parse_key_list(config.get("api_key"))
         self._key_pool = KeyPool(keys) if keys else None
         self.api_key = keys[0] if keys else ""
         self.base_url = config.get("base_url")

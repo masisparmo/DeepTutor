@@ -14,7 +14,16 @@ export function apiUrl(path: string): string {
 }
 
 export function wsUrl(path: string): string {
-  return scopedUrl(path);
+  const scoped = scopedUrl(path);
+  if (typeof window !== "undefined" && scoped.startsWith("/")) {
+    const loc = window.location;
+    const wsProto = loc.protocol === "https:" ? "wss:" : "ws:";
+    const backendPort = "8001";
+    if (loc.port && loc.port !== backendPort) {
+      return `${wsProto}//${loc.hostname}:${backendPort}${scoped}`;
+    }
+  }
+  return scoped;
 }
 
 export function parseAuthEnabled(raw: string | undefined): boolean {
